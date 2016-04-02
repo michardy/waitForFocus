@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 				cout << GetForegroundWindow() << ", ";
 				string resstr = CW2A(pszMem);
 				wcout << pszMem << endl;
-				if (resstr.find(string(argv[1])) != string::npos) {
+				if (resstr.find(string(argv[1])) != string::npos && !(resstr.find(string("waitForFocus.exe")) != string::npos)) {
 					cout << "found!" << endl;
 					nfound = false;
 				}
