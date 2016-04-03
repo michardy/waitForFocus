@@ -10,10 +10,39 @@
 #include <atlstr.h>
 //#include <ShellApi.h>
 #include <iostream>
+#include "atlstr.h"
 
 using namespace std;
 
 LPWSTR pszMem;
+
+BOOL CALLBACK FindWindowBySubstr(HWND hwnd, LPARAM substring)
+{
+	//cout << "start:" << endl;
+	//cout << LPCTSTR(substring) << endl;
+	//_tprintf(LPCTSTR(substring));
+	//cout << "endl" << endl;
+	const DWORD TITLE_SIZE = 1024;
+	TCHAR windowTitle[TITLE_SIZE];
+
+	if (GetWindowText(hwnd, windowTitle, TITLE_SIZE))
+	{
+		//_tprintf(TEXT("%s\n"), windowTitle);
+		// Uncomment to print all windows being enumerated
+		string fstr = CW2A(windowTitle);
+		if (fstr.find(string("Chrome")) != string::npos) {
+			cout << "Found window!" << endl;
+		}
+		if (_tcsstr(windowTitle, LPCTSTR(substring)) != NULL)
+		{
+			// We found the window! Stop enumerating.
+			cout << substring << endl;
+			_tprintf(TEXT("%s\n"), windowTitle);
+			return false;
+		}
+	}
+	return true; // Need to continue enumerating windows
+}
 
 int main(int argc, char* argv[])
 {
@@ -27,6 +56,8 @@ int main(int argc, char* argv[])
 		}
 		else {
 			cout << "\"" << argv[1] << "\"" << endl;
+			CHAR substring[] = "Chrome";
+			cout << EnumWindows(FindWindowBySubstr, (LPARAM)substring) << endl;
 			bool nfound = true;
 			while (nfound) {
 				HWND WINAPI GetForegroundWindow(void);
