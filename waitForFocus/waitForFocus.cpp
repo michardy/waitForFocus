@@ -18,31 +18,20 @@ LPWSTR pszMem;
 
 BOOL CALLBACK FindWindowBySubstr(HWND hwnd, LPARAM substring)
 {
-	//cout << "start:" << endl;
-	//cout << LPCSTR(substring) << endl;
-	//_tprintf(LPCTSTR(substring));
-	//cout << "endl" << endl;
 	const DWORD TITLE_SIZE = 1024;
 	TCHAR windowTitle[TITLE_SIZE];
 
 	if (GetWindowText(hwnd, windowTitle, TITLE_SIZE))
 	{
-		//_tprintf(TEXT("%s\n"), windowTitle);
-		// Uncomment to print all windows being enumerated
 		string fstr = CW2A(windowTitle);
 		if (fstr.find(LPCSTR(substring)) != string::npos && !(fstr.find("waitForFocus.exe") != string::npos)) {
 			cout << "Found window!" << endl;
 			_tprintf(TEXT("%s\n"), windowTitle);
-		}
-		/*if (_tcsstr(windowTitle, LPCSTR(substring)) != NULL)
-		{
-			// We found the window! Stop enumerating.
-			cout << substring << endl;
-			_tprintf(TEXT("%s\n"), windowTitle);
+			SwitchToThisWindow(hwnd, true);//The true enable alt tab emulation which prevents the transparent window bug
 			return false;
-		}*/
+		}
 	}
-	return true; // Need to continue enumerating windows
+	return true;
 }
 
 int main(int argc, char* argv[])
@@ -57,25 +46,34 @@ int main(int argc, char* argv[])
 		}
 		else {
 			cout << "\"" << argv[1] << "\"" << endl;
-			CHAR substring[] = "Chrome";
-			cout << EnumWindows(FindWindowBySubstr, (LPARAM)substring) << endl;
 			bool nfound = true;
 			while (nfound) {
-				HWND WINAPI GetForegroundWindow(void);
-				pszMem = (LPWSTR)VirtualAlloc((LPVOID)NULL,
-					(DWORD)(50), MEM_COMMIT,
-					PAGE_READWRITE);
-				GetWindowText(GetForegroundWindow(), pszMem,
-					50);
-				cout << GetForegroundWindow() << ", ";
-				string resstr = CW2A(pszMem);
-				wcout << pszMem << endl;
-				if (resstr.find(string(argv[1])) != string::npos && !(resstr.find(string("waitForFocus.exe")) != string::npos)) {
-					cout << "found!" << endl;
-					nfound = false;
+				HWND windowHandle = FindWindowA(0, argv[0]);
+				if (windowHandle == NULL) {
+					HWND WINAPI GetForegroundWindow(void);
+					pszMem = (LPWSTR)VirtualAlloc((LPVOID)NULL,
+						(DWORD)(80), MEM_COMMIT,
+						PAGE_READWRITE);
+					GetWindowText(GetForegroundWindow(), pszMem,
+						80);
+					cout << GetForegroundWindow() << ", ";
+					string resstr = CW2A(pszMem);
+					wcout << pszMem << endl;
+					if (resstr.find(string(argv[1])) != string::npos && !(resstr.find(string("waitForFocus.exe")) != string::npos)) {
+						cout << "found!" << endl;
+						nfound = false;
+					}
+					else {
+						if (!EnumWindows(FindWindowBySubstr, (LPARAM)argv[1])) {
+							nfound = false;
+						}
+						else {
+							Sleep(1000);
+						}
+					}
 				}
 				else {
-					Sleep(1000);
+					SetForegroundWindow(windowHandle);
 				}
 			}
 
