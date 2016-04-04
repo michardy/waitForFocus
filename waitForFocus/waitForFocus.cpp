@@ -19,7 +19,7 @@ LPWSTR pszMem;
 BOOL CALLBACK FindWindowBySubstr(HWND hwnd, LPARAM substring)
 {
 	//cout << "start:" << endl;
-	//cout << LPCTSTR(substring) << endl;
+	//cout << LPCSTR(substring) << endl;
 	//_tprintf(LPCTSTR(substring));
 	//cout << "endl" << endl;
 	const DWORD TITLE_SIZE = 1024;
@@ -30,16 +30,17 @@ BOOL CALLBACK FindWindowBySubstr(HWND hwnd, LPARAM substring)
 		//_tprintf(TEXT("%s\n"), windowTitle);
 		// Uncomment to print all windows being enumerated
 		string fstr = CW2A(windowTitle);
-		if (fstr.find(string("Chrome")) != string::npos) {
+		if (fstr.find(LPCSTR(substring)) != string::npos && !(fstr.find("waitForFocus.exe") != string::npos)) {
 			cout << "Found window!" << endl;
+			_tprintf(TEXT("%s\n"), windowTitle);
 		}
-		if (_tcsstr(windowTitle, LPCTSTR(substring)) != NULL)
+		/*if (_tcsstr(windowTitle, LPCSTR(substring)) != NULL)
 		{
 			// We found the window! Stop enumerating.
 			cout << substring << endl;
 			_tprintf(TEXT("%s\n"), windowTitle);
 			return false;
-		}
+		}*/
 	}
 	return true; // Need to continue enumerating windows
 }
