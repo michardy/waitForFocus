@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 			cout << "\"" << argv[1] << "\"" << endl;
 			bool nfound = true;
 			while (nfound) {
-				HWND windowHandle = FindWindowA(0, argv[0]);
+				HWND windowHandle = FindWindowA(0, argv[1]);
 				if (windowHandle == NULL) {
 					HWND WINAPI GetForegroundWindow(void);
 					pszMem = (LPWSTR)VirtualAlloc((LPVOID)NULL,
@@ -73,7 +73,9 @@ int main(int argc, char* argv[])
 					}
 				}
 				else {
+					cout << "found absolute result" << endl;
 					SetForegroundWindow(windowHandle);
+					nfound = false;
 				}
 			}
 
