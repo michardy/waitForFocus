@@ -2,15 +2,9 @@
 //
 
 #include "stdafx.h"
-//#include <Windows.h>
-//#include <Winuser.h>
 #include <string.h>
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <atlstr.h>
-//#include <ShellApi.h>
 #include <iostream>
-#include "atlstr.h"
 
 using namespace std;
 
@@ -74,7 +68,7 @@ int main(int argc, char* argv[])
 				}
 				else {
 					cout << "found absolute result" << endl;
-					SetForegroundWindow(windowHandle);
+					SwitchToThisWindow(windowHandle, true);
 					nfound = false;
 				}
 			}
