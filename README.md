@@ -4,6 +4,7 @@ It can be used with visual basic to help automate the configuration of computers
 
 # Download
 https://goo.gl/yLf4gK
+If you don't trust these binaries you can [compile](https://github.com/michardy/waitForFocus/blob/master/README.md#compiling) them yourself
 
 # Command-Line Use
 `waitForFocus.exe "<window name>"`
